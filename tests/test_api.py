@@ -95,6 +95,27 @@ def test_create_quiz_wrong_difficulty(client):
     assert response.status_code == 400
 
 
+def test_create_quiz_duplicate_title(client):
+    response1 = client.post("/api/quizzes", json={"title": "Geography"})
+    assert response1.status_code == 201
+
+    response2 = client.post("/api/quizzes", json={"title": "Geography"})
+    assert response2.status_code == 400
+    assert response2.get_json()["error"] == "A quiz with this title already exists"
+
+
+def test_create_quiz_duplicate_title_case_insensitive(client):
+    response1 = client.post("/api/quizzes", json={"title": "Science"})
+    assert response1.status_code == 201
+
+    response2 = client.post("/api/quizzes", json={"title": "science"})
+    assert response2.status_code == 400
+    assert response2.get_json()["error"] == "A quiz with this title already exists"
+
+    response3 = client.post("/api/quizzes", json={"title": "History"})
+    assert response3.status_code == 201
+
+
 def test_filter_quizzes_by_difficulty(client):
     create_quiz(client, "Easy One", "easy")
     create_quiz(client, "Hard One", "hard")

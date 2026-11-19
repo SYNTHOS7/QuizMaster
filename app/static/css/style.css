@@ -146,3 +146,14 @@ td {
 [hidden] {
     display: none !important;
 }
+
+#leaderboard-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#leaderboard-table th,
+#leaderboard-table td {
+    overflow-wrap: anywhere;
+}
+

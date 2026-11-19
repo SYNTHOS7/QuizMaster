@@ -55,6 +55,7 @@ function showOption(question, letter) {
 }
 
 function showQuestion() {
+
     const question = quiz.questions[currentIndex];
     const isLast = currentIndex === quiz.questions.length - 1;
 
@@ -71,6 +72,14 @@ function showQuestion() {
     nextButton.hidden = isLast;
     submitButton.hidden = !isLast;
 }
+let quizInProgress = false;
+
+window.addEventListener("beforeunload", (event) => {
+    if (quizInProgress) {
+        event.preventDefault();
+        event.returnValue = "";
+    }
+});
 
 async function submitQuiz() {
     const seconds = Math.round((Date.now() - startTime) / 1000);
@@ -90,6 +99,7 @@ async function submitQuiz() {
     }
     result.player_name = playerName;
     sessionStorage.setItem("result", JSON.stringify(result));
+    quizInProgress = false;
     window.location.href = "/result";
 }
 
@@ -104,6 +114,7 @@ startForm.addEventListener("submit", function (event) {
     startForm.hidden = true;
     questionBox.hidden = false;
     startTime = Date.now();
+    quizInProgress = true;
     showQuestion();
 });
 
