@@ -96,23 +96,45 @@ def test_create_quiz_wrong_difficulty(client):
 
 
 def test_create_quiz_duplicate_title(client):
-    response1 = client.post("/api/quizzes", json={"title": "Geography"})
+    headers = {"Authorization": "Bearer test-write-token"}
+    response1 = client.post(
+        "/api/quizzes",
+        json={"title": "Geography"},
+        headers=headers,
+    )
     assert response1.status_code == 201
 
-    response2 = client.post("/api/quizzes", json={"title": "Geography"})
+    response2 = client.post(
+        "/api/quizzes",
+        json={"title": "Geography"},
+        headers=headers,
+    )
     assert response2.status_code == 400
     assert response2.get_json()["error"] == "A quiz with this title already exists"
 
 
 def test_create_quiz_duplicate_title_case_insensitive(client):
-    response1 = client.post("/api/quizzes", json={"title": "Science"})
+    headers = {"Authorization": "Bearer test-write-token"}
+    response1 = client.post(
+        "/api/quizzes",
+        json={"title": "Science"},
+        headers=headers,
+    )
     assert response1.status_code == 201
 
-    response2 = client.post("/api/quizzes", json={"title": "science"})
+    response2 = client.post(
+        "/api/quizzes",
+        json={"title": "science"},
+        headers=headers,
+    )
     assert response2.status_code == 400
     assert response2.get_json()["error"] == "A quiz with this title already exists"
 
-    response3 = client.post("/api/quizzes", json={"title": "History"})
+    response3 = client.post(
+        "/api/quizzes",
+        json={"title": "History"},
+        headers=headers,
+    )
     assert response3.status_code == 201
 
 
