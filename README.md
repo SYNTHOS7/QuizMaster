@@ -98,9 +98,10 @@ curl -X POST http://127.0.0.1:5000/api/quizzes \
   -d "{\"title\":\"Maths\"}"
 ```
 
-Write endpoints return `401` without a valid token. If `WRITE_API_TOKEN` is
-not configured, all write endpoints remain blocked. Read endpoints, quiz
-submission, and the leaderboard remain available without a token.
+When `WRITE_API_TOKEN` is set, write endpoints return `401` without a valid
+token. If `WRITE_API_TOKEN` is not configured, write endpoints remain open as
+they were before token protection was added. Read endpoints, quiz submission,
+and the leaderboard remain available without a token.
 
 ## Running tests
 

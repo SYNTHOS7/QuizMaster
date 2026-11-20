@@ -67,13 +67,25 @@ def test_add_question_requires_valid_token(client):
     assert response.get_json() == {"error": "Valid write API token required"}
 
 
-def test_missing_write_token_configuration_blocks_writes(app, client):
+def test_missing_write_token_configuration_allows_writes(app, client):
     app.config["WRITE_API_TOKEN"] = ""
     response = client.post("/api/quizzes", json={"title": "Maths"})
-    assert response.status_code == 401
-    assert response.get_json() == {
-        "error": "Write API token is not configured"
-    }
+    assert response.status_code == 201
+    assert response.get_json()["title"] == "Maths"
+
+    quiz_id = response.get_json()["id"]
+    response = client.post(
+        f"/api/quizzes/{quiz_id}/questions",
+        json={
+            "text": "What is 1 + 1?",
+            "option_a": "1",
+            "option_b": "2",
+            "option_c": "3",
+            "option_d": "4",
+            "correct_option": "B",
+        },
+    )
+    assert response.status_code == 201
 
 
 def test_create_quiz_empty_title(client):
